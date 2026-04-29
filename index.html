@@ -1,1 +1,420 @@
-Hello
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Comrade — See who's on campus today</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(160deg, #a8d8f0 0%, #5ba8dc 30%, #1e6eb5 65%, #0d4a8a 100%);
+      min-height: 100vh;
+      color: white;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      margin-left: 24px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .nav-links a:hover { color: white; }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 80px 20px 60px;
+    }
+    .logo-icon {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(145deg, #e8f4ff, #b8d9f5);
+      border: 3px solid rgba(255,255,255,0.8);
+      border-radius: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 52px;
+      box-shadow: 0 8px 32px rgba(13,74,138,0.3);
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+      text-shadow: 0 2px 12px rgba(13,74,138,0.3);
+    }
+    .hero p {
+      font-size: clamp(16px, 2.5vw, 22px);
+      color: rgba(255,255,255,0.85);
+      max-width: 560px;
+      margin: 0 auto 40px;
+      line-height: 1.6;
+    }
+    .badge-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .store-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.5);
+      border-radius: 14px;
+      padding: 12px 24px;
+      text-decoration: none;
+      color: white;
+      font-weight: 700;
+      font-size: 15px;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+    .store-badge:hover {
+      background: rgba(255,255,255,0.28);
+      transform: translateY(-2px);
+    }
+    .store-badge span { font-size: 24px; }
+
+    /* PHONE MOCKUP */
+    .mockup-section {
+      display: flex;
+      justify-content: center;
+      padding: 20px 20px 60px;
+    }
+    .phone {
+      width: 260px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 40px;
+      padding: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 60px rgba(13,74,138,0.35);
+    }
+    .phone-screen {
+      background: linear-gradient(160deg, #a8d8f0, #1e6eb5);
+      border-radius: 28px;
+      padding: 20px 14px;
+      min-height: 460px;
+    }
+    .phone-greeting { font-size: 11px; color: rgba(255,255,255,0.7); font-weight: 600; }
+    .phone-name { font-size: 22px; font-weight: 800; margin-bottom: 16px; }
+    .phone-card {
+      background: rgba(255,255,255,0.2);
+      border: 1.5px solid rgba(255,255,255,0.45);
+      border-radius: 14px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .phone-avatar {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #a8d8f0, #3a9de8);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; flex-shrink: 0;
+      border: 1.5px solid rgba(255,255,255,0.6);
+    }
+    .phone-friend-name { font-size: 12px; font-weight: 700; }
+    .phone-friend-detail { font-size: 10px; color: rgba(255,255,255,0.7); }
+    .phone-badge-on {
+      margin-left: auto;
+      background: linear-gradient(135deg, #34d399, #059669);
+      font-size: 9px; font-weight: 700;
+      padding: 3px 8px; border-radius: 20px; flex-shrink: 0;
+    }
+    .phone-badge-off {
+      margin-left: auto;
+      background: rgba(255,255,255,0.25);
+      font-size: 9px; font-weight: 700;
+      padding: 3px 8px; border-radius: 20px; flex-shrink: 0;
+      color: rgba(255,255,255,0.7);
+    }
+    .phone-section-label {
+      font-size: 9px; font-weight: 700;
+      color: rgba(255,255,255,0.6);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin: 12px 0 6px;
+    }
+
+    /* FEATURES */
+    .features {
+      padding: 60px 20px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .features h2 {
+      text-align: center;
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      margin-bottom: 48px;
+      letter-spacing: -0.5px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.15);
+      border: 1.5px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 28px 24px;
+      backdrop-filter: blur(10px);
+    }
+    .feature-icon { font-size: 36px; margin-bottom: 14px; }
+    .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p { font-size: 14px; color: rgba(255,255,255,0.78); line-height: 1.6; }
+
+    /* HOW IT WORKS */
+    .how {
+      padding: 60px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .how h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 800;
+      margin-bottom: 48px;
+      letter-spacing: -0.5px;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 24px;
+    }
+    .step { padding: 8px; }
+    .step-num {
+      width: 48px; height: 48px;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.5);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 800;
+      margin: 0 auto 14px;
+    }
+    .step h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+    .step p { font-size: 13px; color: rgba(255,255,255,0.75); line-height: 1.5; }
+
+    /* PRIVACY BANNER */
+    .privacy-banner {
+      margin: 0 20px 60px;
+      max-width: 920px;
+      margin-left: auto;
+      margin-right: auto;
+      background: rgba(255,255,255,0.12);
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
+    }
+    .privacy-banner .icon { font-size: 48px; }
+    .privacy-banner h3 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .privacy-banner p { font-size: 15px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      font-size: 13px;
+      color: rgba(255,255,255,0.55);
+    }
+    footer a { color: rgba(255,255,255,0.7); text-decoration: none; margin: 0 12px; }
+    footer a:hover { color: white; }
+
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .nav-links { display: none; }
+      .privacy-banner { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">🎓 Campus Comrade</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="./support">Support</a>
+      <a href="./privacy-policy">Privacy</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="logo-icon">🎓</div>
+    <h1>See who's on campus<br>before you leave home</h1>
+    <p>Campus Comrade lets university students share their on-campus status with friends — no location data, no hassle, no group chats needed.</p>
+    <div class="badge-row">
+      <a href="#" class="store-badge">
+        <!-- Replace # with your actual App Store link when published -->
+        <span>🍎</span> Download on the App Store
+      </a>
+      <a href="#" class="store-badge">
+        <!-- Replace # with your actual Google Play link when published -->
+        <span>▶</span> Get it on Google Play
+      </a>
+    </div>
+  </section>
+
+  <!-- PHONE MOCKUP -->
+  <div class="mockup-section">
+    <div class="phone">
+      <div class="phone-screen">
+        <div class="phone-greeting">Good morning,</div>
+        <div class="phone-name">Jordan 👋</div>
+        <div class="phone-section-label">On campus now · 3</div>
+        <div class="phone-card">
+          <div class="phone-avatar">SK</div>
+          <div>
+            <div class="phone-friend-name">Sarah K.</div>
+            <div class="phone-friend-detail">Engineering · Studying</div>
+          </div>
+          <div class="phone-badge-on">On campus</div>
+        </div>
+        <div class="phone-card">
+          <div class="phone-avatar" style="background:linear-gradient(135deg,#c3e8fb,#5ab8e8)">MT</div>
+          <div>
+            <div class="phone-friend-name">Marcus T.</div>
+            <div class="phone-friend-detail">Library · Classes</div>
+          </div>
+          <div class="phone-badge-on">On campus</div>
+        </div>
+        <div class="phone-card">
+          <div class="phone-avatar" style="background:linear-gradient(135deg,#b8d9fb,#3480d8)">AL</div>
+          <div>
+            <div class="phone-friend-name">Aisha L.</div>
+            <div class="phone-friend-detail">Student Union · Clubs</div>
+          </div>
+          <div class="phone-badge-on">On campus</div>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,0.2);margin:10px 0;"></div>
+        <div class="phone-section-label">Off campus today · 2</div>
+        <div class="phone-card" style="opacity:0.55">
+          <div class="phone-avatar" style="background:rgba(255,255,255,0.2)">RJ</div>
+          <div><div class="phone-friend-name">Ryan J.</div></div>
+          <div class="phone-badge-off">Off campus</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section class="features" id="features">
+    <h2>Everything you need,<br>nothing you don't</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>Friends only</h3>
+        <p>Your status is only visible to people you've mutually added as friends. No strangers can see your information.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📍</div>
+        <h3>No location data</h3>
+        <p>Campus Comrade never accesses your GPS or location. You manually set your status — you're always in control.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Live updates</h3>
+        <p>When a friend updates their status, your home screen updates automatically. No refreshing needed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <h3>Push notifications</h3>
+        <p>Get notified the moment a friend arrives on campus so you can plan to meet up between classes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏛️</div>
+        <h3>Building & activity</h3>
+        <p>See exactly where your friends are and what they're up to — studying, classes, clubs, lectures and more.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Find by username</h3>
+        <p>Add friends by searching their username. Send a request and once accepted they appear on your feed instantly.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <h2>Up and running in minutes</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Create an account</h3>
+        <p>Sign up with your university email and choose a username.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Add your friends</h3>
+        <p>Search for friends by username and send them a request.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Update your status</h3>
+        <p>Tap Status, select On campus, pick your building and activity.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h3>See who's around</h3>
+        <p>Your home screen shows exactly who's on campus and what they're doing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY BANNER -->
+  <div class="privacy-banner">
+    <div class="icon">🔒</div>
+    <div>
+      <h3>Your privacy is our priority</h3>
+      <p>No location tracking. No ads. No selling your data. Campus Comrade collects only what's needed to run the app and nothing more. Read our full <a href="./privacy-policy" style="color:white;font-weight:700;">privacy policy</a>.</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p style="margin-bottom:12px;">
+      <a href="./privacy-policy">Privacy Policy</a>
+      <a href="./support">Support</a>
+      <a href="mailto:campuscomarde.inc@gmail.com">Contact</a>
+    
+    </p>
+    <p>© 2026 Campus Comrade · Made for university students · No location data used</p>
+  </footer>
+
+</body>
+</html>
